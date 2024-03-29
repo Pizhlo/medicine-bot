@@ -1,6 +1,6 @@
 module github.com/Pizhlo/medicine-bot
 
-go 1.21.0
+go 1.21
 
 require github.com/spf13/viper v1.18.2
 
