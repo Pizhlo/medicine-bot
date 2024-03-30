@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/Pizhlo/medicine-bot/internal/controller"
+	"github.com/sirupsen/logrus"
 	tele "gopkg.in/telebot.v3"
 )
 
@@ -18,5 +19,10 @@ func New(bot *tele.Bot, controller *controller.Controller) *Server {
 }
 
 func (s *Server) Start(ctx context.Context) {
+	err := s.controller.LoadUsers(ctx)
+	if err != nil {
+		logrus.Fatalf("error while loading all users: %v", err)
+	}
+
 	s.setupBot(ctx)
 }

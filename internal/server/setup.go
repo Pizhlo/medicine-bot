@@ -9,6 +9,8 @@ import (
 const startCmd = "/start"
 
 func (s *Server) setupBot(ctx context.Context) {
+	s.bot.Use(s.CheckUser(ctx))
+
 	s.bot.Handle(startCmd, func(telectx tele.Context) error {
 		return s.controller.StartCmd(ctx, telectx)
 	})
