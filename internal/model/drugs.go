@@ -2,7 +2,6 @@ package model
 
 import (
 	"database/sql"
-	"time"
 )
 
 type Drug struct {
@@ -11,7 +10,6 @@ type Drug struct {
 	UserID      int64
 	Name        string
 	Description sql.NullString
-	Created     time.Time
 	TakeToday   bool
 	TodayCount  int
 }

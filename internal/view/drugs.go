@@ -16,10 +16,6 @@ func NewDrug() *DrugsView {
 	return &DrugsView{pages: make([]string, 0), currentPage: 0}
 }
 
-const (
-	createdFieldFormat = "02.01.2006 15:04:05"
-)
-
 var (
 	// inline кнопка для переключения на предыдущую страницу
 	BtnPrevPgDrugs = tele.Btn{Text: "<", Unique: "prev_pg_drugs"}
@@ -32,7 +28,7 @@ var (
 	BtnLastPgDrugs = tele.Btn{Text: ">>", Unique: "end_pg_drugs"}
 
 	// inline кнопка чтобы отметить прием лекарства
-	BtnAddTakeDrug = tele.Btn{Text: "Добавить прием", Unique: "add_take"}
+	BtnAddTakeDrug = tele.Btn{Text: "➕Добавить прием", Unique: "add_take"}
 )
 
 // Message формирует список сообщений из моделей лекарств и возвращает первую страницу
@@ -59,8 +55,8 @@ func (v *DrugsView) Message(drugs []model.Drug) (string, error) {
 			todayCount = "нет"
 		}
 
-		res := fmt.Sprintf("<b>%d. %s</b>\n\nОписание: %s\nПринимал(а) сегодня: %s\nСоздано: %s",
-			drug.ViewID, drug.Name, description, todayCount, drug.Created.Format(createdFieldFormat))
+		res := fmt.Sprintf("<b>%d. %s</b>\n\nОписание: %s\nПринимал(а) сегодня: %s",
+			drug.ViewID, drug.Name, description, todayCount)
 
 		v.pages = append(v.pages, res)
 
@@ -107,4 +103,51 @@ func (v *DrugsView) Keyboard() *tele.ReplyMarkup {
 	)
 
 	return menu
+}
+
+// SetCurrentToFirst устанавливает текущий номер страницы на 1
+func (v *DrugsView) SetCurrentToFirst() {
+	v.currentPage = 0
+}
+
+// Clear используется когда удаляются все лекарства: очищает список, устанавливает текущую страницу в 0
+func (v *DrugsView) Clear() {
+	v.currentPage = 0
+	v.pages = make([]string, 0)
+}
+
+// Next возвращает следующую страницу сообщений
+func (v *DrugsView) Next() string {
+	if v.currentPage == v.total()-1 {
+		v.currentPage = 0
+	} else {
+		v.currentPage++
+	}
+
+	return v.pages[v.currentPage]
+}
+
+// Previous возвращает предыдущую страницу сообщений
+func (v *DrugsView) Previous() string {
+	if v.currentPage == 0 {
+		v.currentPage = v.total() - 1
+	} else {
+		v.currentPage--
+	}
+
+	return v.pages[v.currentPage]
+}
+
+// Last возвращает последнюю страницу сообщений
+func (v *DrugsView) Last() string {
+	v.currentPage = v.total() - 1
+
+	return v.pages[v.currentPage]
+}
+
+// First возвращает первую страницу сообщений
+func (v *DrugsView) First() string {
+	v.currentPage = 0
+
+	return v.pages[v.currentPage]
 }

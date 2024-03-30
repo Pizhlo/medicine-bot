@@ -34,14 +34,12 @@ func (c *Controller) SaveUser(ctx context.Context, tgID int64) error {
 	return c.userSrv.SaveUser(ctx, tgID)
 }
 
-func (c *Controller) LoadUsers(ctx context.Context) error {
-	users, err := c.userSrv.GetAllUsers(ctx)
-	if err != nil {
-		return nil
-	}
+func (c *Controller) GetAllUsers(ctx context.Context) ([]int64, error) {
+	return c.userSrv.GetAllUsers(ctx)
+}
 
+func (c *Controller) LoadUsers(ctx context.Context, users []int64) error {
 	c.drugSrv.SaveUsers(users)
-
 	return c.userSrv.LoadUsers(ctx, users)
 }
 

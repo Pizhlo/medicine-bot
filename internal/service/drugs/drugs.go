@@ -12,17 +12,19 @@ type DrugsSrv struct {
 	mu          sync.Mutex
 	drugsEditor drugsEditor
 	views       map[int64]*view.DrugsView
+	drugsMap    map[int64]*model.Drug
 }
 
 type drugsEditor interface {
-	Save(ctx context.Context, tgID int64, drug model.Drug) error
-	GetbyUser(ctx context.Context, tgId int64) ([]model.Drug, error)
+	Save(ctx context.Context, drug *model.Drug) error
+	GetByUser(ctx context.Context, tgId int64) ([]model.Drug, error)
 }
 
 func New(drugsEditor drugsEditor) *DrugsSrv {
 	return &DrugsSrv{drugsEditor: drugsEditor,
-		mu:    sync.Mutex{},
-		views: make(map[int64]*view.DrugsView)}
+		mu:       sync.Mutex{},
+		views:    make(map[int64]*view.DrugsView),
+		drugsMap: make(map[int64]*model.Drug)}
 }
 
 func (s *DrugsSrv) SaveUsers(users []int64) {
