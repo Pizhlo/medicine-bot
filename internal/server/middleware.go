@@ -14,7 +14,7 @@ func (s *Server) CheckUser(contxt context.Context) tele.MiddlewareFunc {
 		return func(ctx tele.Context) error {
 			if !s.controller.CheckUser(contxt, ctx.Chat().ID) {
 				logrus.Debugf("user %d not found in map. Saving...", ctx.Chat().ID)
-				err := s.controller.SaveUser(contxt, ctx.Chat().ID)
+				err := s.SaveUser(contxt, ctx)
 				if err != nil {
 					logrus.Errorf("error while saving user: %v", err)
 				}

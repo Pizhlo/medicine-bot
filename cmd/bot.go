@@ -8,7 +8,9 @@ import (
 	"github.com/Pizhlo/medicine-bot/internal/config"
 	"github.com/Pizhlo/medicine-bot/internal/controller"
 	"github.com/Pizhlo/medicine-bot/internal/server"
+	"github.com/Pizhlo/medicine-bot/internal/service/drugs"
 	"github.com/Pizhlo/medicine-bot/internal/service/user"
+	drugs_storage "github.com/Pizhlo/medicine-bot/internal/storage/drugs"
 	user_storage "github.com/Pizhlo/medicine-bot/internal/storage/user"
 	"github.com/sirupsen/logrus"
 	tele "gopkg.in/telebot.v3"
@@ -30,9 +32,15 @@ func Start(confName, path string) {
 		logrus.Fatalf("unable to connect DB: %v", err)
 	}
 
-	userSrv := user.New(dbUser)
+	dbDrugs, err := drugs_storage.New(conf.DBAddress)
+	if err != nil {
+		logrus.Fatalf("unable to connect DB: %v", err)
+	}
 
-	controller := controller.New(userSrv)
+	userSrv := user.New(dbUser)
+	drugsSrv := drugs.New(dbDrugs)
+
+	controller := controller.New(userSrv, drugsSrv)
 
 	bot, err := tele.NewBot(tele.Settings{
 		Token:  conf.Token,
