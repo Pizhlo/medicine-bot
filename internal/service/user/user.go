@@ -47,12 +47,7 @@ func (s *UserSrv) SaveUser(ctx context.Context, tgID int64) error {
 }
 
 // LoadUsers загружает в память всех пользователей из БД
-func (s *UserSrv) LoadUsers(ctx context.Context) error {
-	users, err := s.userEditor.GetAll(ctx)
-	if err != nil {
-		return err
-	}
-
+func (s *UserSrv) LoadUsers(ctx context.Context, users []int64) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -62,4 +57,8 @@ func (s *UserSrv) LoadUsers(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (s *UserSrv) GetAllUsers(ctx context.Context) ([]int64, error) {
+	return s.userEditor.GetAll(ctx)
 }

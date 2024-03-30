@@ -26,3 +26,9 @@ func (s *Server) Start(ctx context.Context) {
 
 	s.setupBot(ctx)
 }
+
+// HandleError обрабатывает ошибку: устанавливает состояние в дефолтное, передает контроллеру
+func (s *Server) HandleError(ctx tele.Context, err error) {
+	// обрабатываем ошибку
+	s.controller.HandleError(ctx, err)
+}
