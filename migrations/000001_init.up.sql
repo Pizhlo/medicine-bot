@@ -3,6 +3,7 @@ CREATE SCHEMA IF NOT EXISTS users;
 CREATE TABLE IF NOT EXISTS users.users(
     id serial not null,
     tg_id int not null,
+    unique(tg_id),
     primary key(id)
 );
 
